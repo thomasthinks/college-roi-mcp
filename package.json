@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "MCP server for U.S. college ROI data: 30-year NPV for 500 colleges, lifetime ROI for 134 majors, best-value and out-of-state-penalty rankings. Free, keyless, CC BY 4.0.",
   "license": "MIT",
+  "mcpName": "io.github.thomasthinks/college-roi-mcp",
   "type": "module",
   "bin": {
     "college-roi-mcp": "dist/index.js"
