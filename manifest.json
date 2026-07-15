@@ -1,0 +1,187 @@
+{
+  "manifest_version": "0.2",
+  "name": "college-roi-mcp",
+  "display_name": "College ROI",
+  "version": "1.0.1",
+  "description": "U.S. college ROI data: 30-year NPV for 500 colleges, lifetime ROI for 134 majors, best-value and out-of-state-penalty rankings. Free, keyless, CC BY 4.0.",
+  "author": {
+    "name": "LE TEEN",
+    "url": "https://le-teen.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomasthinks/college-roi-mcp"
+  },
+  "homepage": "https://le-teen.com/api",
+  "license": "MIT",
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/dist/index.js"
+      ]
+    }
+  },
+  "long_description": "30-year NPV for 500 U.S. four-year colleges (resident & non-resident), lifetime ROI for 19 major categories + 115 CIP subfields, per-state best-value rankings, and the out-of-state tuition penalty. Wraps the free, keyless LE TEEN College ROI API (CC BY 4.0, FREOPP/IPEDS/BEA-derived, DOI 10.5281/zenodo.21351602).",
+  "keywords": [
+    "education",
+    "college",
+    "roi",
+    "tuition",
+    "npv",
+    "earnings",
+    "dataset"
+  ],
+  "tools": [
+    {
+      "name": "list_majors",
+      "description": "List majors by lifetime ROI (median/mean, % never break even, break-even age, AI-exposure band)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "category",
+              "subfield",
+              "all"
+            ],
+            "description": "Filter majors"
+          },
+          "parent": {
+            "type": "string",
+            "description": "Category slug filter"
+          },
+          "sort_by": {
+            "type": "string",
+            "enum": [
+              "median_lifetime_roi_usd",
+              "mean_lifetime_roi_usd",
+              "pct_never_breakeven",
+              "graduates",
+              "name"
+            ],
+            "description": "Sort field"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Max rows (1-150)"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_major",
+      "description": "Full ROI distribution for one major category or CIP subfield",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "Major slug or name"
+          }
+        },
+        "required": [
+          "slug"
+        ]
+      }
+    },
+    {
+      "name": "search_colleges",
+      "description": "Search 500 positive-NPV colleges by name/state/control",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Name substring"
+          },
+          "state": {
+            "type": "string",
+            "description": "Two-letter state code"
+          },
+          "control": {
+            "type": "string",
+            "enum": [
+              "public",
+              "private-nonprofit",
+              "private-forprofit"
+            ],
+            "description": "Control filter"
+          },
+          "sort_by": {
+            "type": "string",
+            "enum": [
+              "npv_30yr_resident_usd",
+              "npv_30yr_nonresident_usd",
+              "median_earnings_10yr_usd",
+              "total_cost_of_attendance_usd",
+              "name"
+            ],
+            "description": "Sort field"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Max rows (1-100)"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_college",
+      "description": "Full record for one college (NPV both ways, cost, earnings, break-even age)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "College slug or name"
+          }
+        },
+        "required": [
+          "slug"
+        ]
+      }
+    },
+    {
+      "name": "best_value_colleges",
+      "description": "Each state's best-value four-year colleges at resident pricing",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "Two-letter state code; omit for all states' #1"
+          }
+        }
+      }
+    },
+    {
+      "name": "out_of_state_penalty",
+      "description": "Public colleges ranked by NPV a non-resident gives up",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "number",
+            "description": "Max rows (77 total)"
+          },
+          "state": {
+            "type": "string",
+            "description": "Two-letter state filter"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_api_info",
+      "description": "Underlying API metadata, license, DOI, attribution",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  ]
+}
