@@ -66,7 +66,7 @@ function slugify(s: string): string {
 // ---------------------------------------------------------------------------
 
 const server = new McpServer(
-  { name: "college-roi-mcp", version: "1.0.0" },
+  { name: "college-roi-mcp", version: "1.0.1" },
   {
     instructions:
       "Query U.S. college-ROI data: 30-year net present value (NPV) for 500 four-year colleges, " +
