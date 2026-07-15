@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.le-teen/college-roi-mcp",
+  "description": "U.S. college ROI data: 30-yr NPV for 500 colleges, lifetime ROI for 134 majors. Keyless.",
+  "repository": {
+    "url": "https://github.com/thomasthinks/college-roi-mcp",
+    "source": "github"
+  },
+  "version": "1.0.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "college-roi-mcp",
+      "version": "1.0.1",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "websiteUrl": "https://le-teen.com/api"
+}
