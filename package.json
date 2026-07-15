@@ -1,0 +1,46 @@
+{
+  "name": "college-roi-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for U.S. college ROI data: 30-year NPV for 500 colleges, lifetime ROI for 134 majors, best-value and out-of-state-penalty rankings. Free, keyless, CC BY 4.0.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "college-roi-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('dist/index.js', 0o755)\"",
+    "prepublishOnly": "npm run build",
+    "start": "node dist/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "college",
+    "roi",
+    "education",
+    "tuition",
+    "npv",
+    "earnings",
+    "dataset"
+  ],
+  "author": "LE TEEN (https://le-teen.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasthinks/college-roi-mcp.git"
+  },
+  "homepage": "https://le-teen.com/api",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.6.0"
+  }
+}
