@@ -33,7 +33,7 @@ Any other MCP client: run `npx -y college-roi-mcp` over stdio.
 
 | Tool | What it returns |
 |---|---|
-| `list_majors` | Compact ROI rows for 19 categories / 115 subfields — median & mean lifetime ROI, % never break even, break-even age, AI-exposure band. Filter by kind/parent, sort, limit. |
+| `list_majors` | Compact ROI rows for 19 categories / 115 subfields — median & mean lifetime ROI, share of graduates in programs that never break even, median break-even age among programs that break even, AI-exposure band (category rows only). Filter by kind/parent, sort, limit. |
 | `get_major` | Full record for one major: ROI distribution (p25/median/mean/p75), completion-adjusted & dropout ROI, graduates/programs, AI-exposure detail. |
 | `search_colleges` | Search the 500 positive-NPV-envelope colleges by name/state/control — resident & non-resident 30-yr NPV, cost of attendance, median earnings, break-even age. |
 | `get_college` | Full record for one college, incl. IPEDS unitid and FREOPP coverage. |
@@ -43,7 +43,7 @@ Any other MCP client: run `npx -y college-roi-mcp` over stdio.
 
 All dollar figures are lifetime/30-year totals in USD. List responses are compact projections with `limit` controls so they stay small in agent contexts; detail tools return the full upstream record.
 
-Note the envelope: only colleges that clear a positive-NPV bar appear (500 of ~1,656 U.S. four-years). A school being *absent* is itself a signal.
+Note the envelope: this server's college list holds only the 500 four-year colleges with the largest FREOPP program coverage that also clear our data gates and show a positive 30-year net value. Absence from the list is a coverage statement, not a verdict.
 
 ## Example prompts
 
