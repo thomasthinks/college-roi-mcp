@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "college-roi-mcp",
   "display_name": "College ROI",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "U.S. college ROI data: 30-year NPV for 500 colleges, lifetime ROI for 134 majors, best-value and out-of-state-penalty rankings. Free, keyless, CC BY 4.0.",
   "author": {
     "name": "LE TEEN",
