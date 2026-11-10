@@ -219,7 +219,9 @@ server.registerTool(
     return ok({
       total_matching: total,
       returned: colleges.length,
-      note: "Only colleges clearing the positive-NPV envelope are listed (500 of ~1,656 four-years). Absence from this list is itself a signal.",
+      // The API's own coverage notes, passed through rather than restated, so
+      // a copy fix on the API reaches MCP clients without a package release.
+      notes: data.notes,
       colleges,
       attribution: ATTRIBUTION,
     });
@@ -253,7 +255,7 @@ server.registerTool(
           .slice(0, 8)
           .map((c: any) => c.slug);
         return err(
-          `No college with slug '${s}'.${near.length ? ` Did you mean: ${near.join(", ")}` : " Note: only the 500 positive-NPV-envelope colleges are covered; use search_colleges to browse."}`
+          `No college with slug '${s}'.${near.length ? ` Did you mean: ${near.join(", ")}` : ` ${data.notes?.[0] ?? ""} Use search_colleges to browse.`}`
         );
       }
       throw e;
