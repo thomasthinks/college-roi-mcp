@@ -11,6 +11,8 @@ import { join } from "node:path";
 
 const RETIRED = [
   { re: /itself a signal/i, why: "absence is a coverage statement, not a verdict (2026-10-21)" },
+  { re: /% of programs that never break even/i, why: "pct_never_breakeven is a share of graduate cohort weight, not of programs (2026-10-21 README; src 2026-11-10)" },
+  { re: /% never break even/i, why: "unqualified; say whose share: graduates in programs that never break even (2026-10-21)" },
   { re: /1,?656/, why: "1,656 is four-years with FREOPP earnings, not the envelope's denominator; the API states coverage itself (2026-10-21)" },
 ];
 

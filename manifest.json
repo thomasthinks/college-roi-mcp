@@ -2,7 +2,7 @@
   "manifest_version": "0.2",
   "name": "college-roi-mcp",
   "display_name": "College ROI",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "U.S. college ROI data: 30-year NPV for 500 colleges, lifetime ROI for 134 majors, best-value and out-of-state-penalty rankings. Free, keyless, CC BY 4.0.",
   "author": {
     "name": "LE TEEN",
@@ -36,8 +36,17 @@
   ],
   "tools": [
     {
+      "name": "get_api_info",
+      "description": "Metadata for the underlying LE TEEN College ROI API: description, license, attribution, DOI, docs URL, and the list of raw endpoints.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
       "name": "list_majors",
-      "description": "List majors by lifetime ROI (median/mean, % never break even, break-even age, AI-exposure band)",
+      "description": "List bachelor's-degree majors (19 broad categories and/or 115 CIP subfields) with lifetime-ROI stats: median/mean lifetime ROI (USD), share of graduates in programs that never break even, median break-even age among programs that break even, and AI-exposure band (category rows only). Returns compact rows sorted by the chosen field. Use the returned slug with get_major for full detail.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -48,11 +57,12 @@
               "subfield",
               "all"
             ],
-            "description": "Filter majors"
+            "default": "all",
+            "description": "Filter to broad categories (19), CIP subfields (115), or all 134."
           },
           "parent": {
             "type": "string",
-            "description": "Category slug filter"
+            "description": "Only subfields of this category slug, e.g. 'engineering'."
           },
           "sort_by": {
             "type": "string",
@@ -63,44 +73,54 @@
               "graduates",
               "name"
             ],
-            "description": "Sort field"
+            "default": "median_lifetime_roi_usd",
+            "description": "Sort field. ROI sorts are descending; name ascending."
           },
           "limit": {
-            "type": "number",
-            "description": "Max rows (1-150)"
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 150,
+            "default": 50,
+            "description": "Max rows returned."
           }
-        }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
       }
     },
     {
       "name": "get_major",
-      "description": "Full ROI distribution for one major category or CIP subfield",
+      "description": "Full lifetime-ROI record for one major category or CIP subfield by slug (e.g. 'nursing', 'computer-science', 'philosophy-and-religious-studies'): ROI distribution (p25/median/mean/p75), never-break-even %, break-even age, completion-adjusted and dropout ROI, graduates/programs counts, and AI-exposure detail. Accepts a plain name and will slugify it; use list_majors to discover exact slugs.",
       "inputSchema": {
         "type": "object",
         "properties": {
           "slug": {
             "type": "string",
-            "description": "Major slug or name"
+            "description": "Major slug or name, e.g. 'computer-science' or 'Computer Science'."
           }
         },
         "required": [
           "slug"
-        ]
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
       }
     },
     {
       "name": "search_colleges",
-      "description": "Search 500 positive-NPV colleges by name/state/control",
+      "description": "Search the 500 largest-coverage U.S. four-year colleges that clear the positive-NPV envelope. Each row: 30-year NPV at resident and non-resident pricing, total cost of attendance, median earnings 10 years after entry, and break-even age. Filter by name substring, state, and control; sorted by resident NPV descending unless overridden. Use the returned slug with get_college.",
       "inputSchema": {
         "type": "object",
         "properties": {
           "query": {
             "type": "string",
-            "description": "Name substring"
+            "description": "Case-insensitive substring of the college name."
           },
           "state": {
             "type": "string",
-            "description": "Two-letter state code"
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Two-letter state code, e.g. 'MI'."
           },
           "control": {
             "type": "string",
@@ -108,8 +128,7 @@
               "public",
               "private-nonprofit",
               "private-forprofit"
-            ],
-            "description": "Control filter"
+            ]
           },
           "sort_by": {
             "type": "string",
@@ -120,67 +139,77 @@
               "total_cost_of_attendance_usd",
               "name"
             ],
-            "description": "Sort field"
+            "default": "npv_30yr_resident_usd"
           },
           "limit": {
-            "type": "number",
-            "description": "Max rows (1-100)"
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 25,
+            "description": "Max rows returned."
           }
-        }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
       }
     },
     {
       "name": "get_college",
-      "description": "Full record for one college (NPV both ways, cost, earnings, break-even age)",
+      "description": "Full record for one college by slug (e.g. 'university-of-michigan-ann-arbor'): 30-year NPV at resident and non-resident pricing, total cost of attendance both ways, median earnings 10 years after entry, break-even age, IPEDS unitid, and FREOPP program coverage. Accepts a plain name and will slugify it; use search_colleges to discover slugs.",
       "inputSchema": {
         "type": "object",
         "properties": {
           "slug": {
             "type": "string",
-            "description": "College slug or name"
+            "description": "College slug or name, e.g. 'university-of-michigan-ann-arbor'."
           }
         },
         "required": [
           "slug"
-        ]
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
       }
     },
     {
       "name": "best_value_colleges",
-      "description": "Each state's best-value four-year colleges at resident pricing",
+      "description": "Each U.S. state's best-value four-year colleges at resident pricing, ranked by 30-year NPV (top 15 per state). Pass a state for its full list; omit it for a nationwide summary (every state's top pick).",
       "inputSchema": {
         "type": "object",
         "properties": {
           "state": {
             "type": "string",
-            "description": "Two-letter state code; omit for all states' #1"
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Two-letter state code, e.g. 'CA'. Omit for all states' #1."
           }
-        }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
       }
     },
     {
       "name": "out_of_state_penalty",
-      "description": "Public colleges ranked by NPV a non-resident gives up",
+      "description": "U.S. public four-year colleges ranked by the out-of-state penalty: how much 30-year NPV a non-resident gives up versus a resident at the same school. Includes both NPVs and both tuition figures per row.",
       "inputSchema": {
         "type": "object",
         "properties": {
           "limit": {
-            "type": "number",
-            "description": "Max rows (77 total)"
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 25,
+            "description": "Max rows returned (77 total)."
           },
           "state": {
             "type": "string",
-            "description": "Two-letter state filter"
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Filter to one state's public colleges."
           }
-        }
-      }
-    },
-    {
-      "name": "get_api_info",
-      "description": "Underlying API metadata, license, DOI, attribution",
-      "inputSchema": {
-        "type": "object",
-        "properties": {}
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
       }
     }
   ]

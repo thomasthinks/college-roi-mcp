@@ -66,7 +66,7 @@ function slugify(s: string): string {
 // ---------------------------------------------------------------------------
 
 const server = new McpServer(
-  { name: "college-roi-mcp", version: "1.0.2" },
+  { name: "college-roi-mcp", version: "1.0.3" },
   {
     instructions:
       "Query U.S. college-ROI data: 30-year net present value (NPV) for 500 four-year colleges, " +
@@ -101,7 +101,8 @@ server.registerTool(
     title: "List majors by lifetime ROI",
     description:
       "List bachelor's-degree majors (19 broad categories and/or 115 CIP subfields) with lifetime-ROI stats: " +
-      "median/mean lifetime ROI (USD), % of programs that never break even, median break-even age, and AI-exposure band. " +
+      "median/mean lifetime ROI (USD), share of graduates in programs that never break even, median break-even age among " +
+      "programs that break even, and AI-exposure band (category rows only). " +
       "Returns compact rows sorted by the chosen field. Use the returned slug with get_major for full detail.",
     inputSchema: {
       kind: z.enum(["category", "subfield", "all"]).default("all")
@@ -139,7 +140,8 @@ server.registerTool(
       graduates: m.graduates,
       ai_exposure_band: m.ai_exposure?.band ?? null,
     }));
-    return ok({ total_matching: total, returned: majors.length, majors, attribution: ATTRIBUTION });
+    // API field definitions, passed through so the semantics travel with the rows.
+    return ok({ total_matching: total, returned: majors.length, notes: data.notes, majors, attribution: ATTRIBUTION });
   }
 );
 
